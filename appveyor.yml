@@ -1,0 +1,29 @@
+version: 0.0.{build}
+skip_tags: true
+init:
+- git config --global core.autocrlf input
+clone_depth: 1
+environment:
+  GITHUB_ACCESS_TOKEN:
+    secure: EQWmbklZx2BXtd3MhdqHmC4BKqRabNNV+JmeMvOMbTSkNCRwZ0xm7qfdsvHt+yTz
+configuration: Release
+platform: Any CPU
+assembly_info:
+  patch: true
+  file: '**\AssemblyInfo.*'
+  assembly_version: '{version}'
+  assembly_file_version: '{version}'
+  assembly_informational_version: '{version}'
+cache: C:\Users\appveyor\AppData\Local\NuGet\Cache
+before_build:
+- nuget restore CommandLineRunner.sln
+build:
+  project: CommandLineRunner.sln
+  verbosity: normal
+on_success:
+- git config --global credential.helper store
+- git config --global user.email "andrew@epworth-consulting.co.uk"
+- git config --global user.name "Andrew Craven"
+- ps: Add-Content "$env:USERPROFILE\.git-credentials" "https://$($env:GITHUB_ACCESS_TOKEN):x-oauth-basic@github.com`n"
+- git tag build-%APPVEYOR_BUILD_VERSION%
+- git push origin --tags
