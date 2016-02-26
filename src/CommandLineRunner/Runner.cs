@@ -48,7 +48,12 @@ namespace CommandLineParser
 
       private object ExtractArg(Argument arg, IDictionary<string, string> values)
       {
-         var value = values[arg.IsKeyed ? arg.Name : string.Empty];
+         string value;
+
+         if (!values.TryGetValue(arg.IsKeyed ? arg.Name : string.Empty, out value))
+         {
+            return null;
+         }
 
          if (arg.Type == typeof(string))
          {
@@ -60,7 +65,7 @@ namespace CommandLineParser
             return Convert.ToInt32(value);
          }
 
-         throw new ArgumentOutOfRangeException(nameof(arg));
+         throw new ArgumentOutOfRangeException(nameof(arg), "Unsupported argument type");
       }
 
       private void WriteUsage()

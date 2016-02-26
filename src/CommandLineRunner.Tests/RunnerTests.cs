@@ -119,6 +119,20 @@ namespace CommandLineParser.Tests
          Assert.That(testContainer.LastIntValue, Is.EqualTo(23));
       }
 
+      [Test]
+      public void call_optional_argument_verb_without_arguments()
+      {
+         var testContainer = new ContainerWithOptionalTwoArgumentVerb();
+         _testSubject.Register(testContainer);
+         _testSubject.Run(new[] { "verb" });
+
+         Assert.That(testContainer.VerbCalledCount, Is.EqualTo(1));
+         Assert.That(testContainer.LastStringValue, Is.Null);
+         Assert.That(testContainer.LastIntValue, Is.Null);
+      }
+
+      // TODO: Missing mandatory arg
+      // TODO: Non-null optional args
       // TODO: missing args, default verb, case, verb messages, bool args, named args
    }
 }
