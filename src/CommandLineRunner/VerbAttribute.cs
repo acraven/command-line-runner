@@ -6,4 +6,9 @@ namespace CommandLineParser
    public class VerbAttribute : Attribute
    {
    }
+
+   [AttributeUsage(AttributeTargets.Parameter)]
+   public class AnonymousAttribute : Attribute
+   {
+   }
 }

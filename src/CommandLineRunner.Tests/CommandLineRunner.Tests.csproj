@@ -30,12 +30,13 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="ContainerWithTwoOptionalArgumentVerb.cs" />
-    <Compile Include="ContainerWithTwoArgumentVerb.cs" />
-    <Compile Include="RunnerTests.cs" />
+    <Compile Include="Scenarios\single_verb_with_two_optional_arguments.cs" />
+    <Compile Include="Scenarios\single_verb_with_two_arguments.cs" />
+    <Compile Include="Scenarios\help.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="StubConsoleWriter.cs" />
-    <Compile Include="ContainerWithTwoSimpleVerbs.cs" />
+    <Compile Include="Scenarios\two_verbs_with_anonymous_values.cs" />
+    <Compile Include="Scenarios\single_verb_with_optional_flag.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\CommandLineRunner\CommandLineRunner.csproj">

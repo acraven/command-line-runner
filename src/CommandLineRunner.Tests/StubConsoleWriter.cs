@@ -7,11 +7,6 @@ namespace CommandLineParser.Tests
    {
       public List<string> Messages { get; } = new List<string>();
 
-      public void Write(string message)
-      {
-         Messages.Add(message);
-      }
-
       public void Write(string format, params object[] args)
       {
          Messages.Add(string.Format(format, args));
