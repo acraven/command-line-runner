@@ -1,8 +1,8 @@
-﻿using System.Collections.Generic;
-using NUnit.Framework;
-
-namespace CommandLineParser.Tests
+﻿namespace CommandLineParser.Tests
 {
+   using System.Collections.Generic;
+   using NUnit.Framework;
+
    public class StubConsoleWriter : IWriteToConsole
    {
       public List<string> Messages { get; } = new List<string>();
