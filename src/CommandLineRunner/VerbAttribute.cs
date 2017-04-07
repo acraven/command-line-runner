@@ -1,14 +1,9 @@
-﻿using System;
-
-namespace CommandLineParser
+﻿namespace CommandLineParser
 {
+   using System;
+
    [AttributeUsage(AttributeTargets.Method)]
    public class VerbAttribute : Attribute
-   {
-   }
-
-   [AttributeUsage(AttributeTargets.Parameter)]
-   public class AnonymousAttribute : Attribute
    {
    }
 }

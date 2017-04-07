@@ -4,24 +4,22 @@
    using System.Collections.Generic;
    using System.Linq;
    using System.Reflection;
+   using System.Threading.Tasks;
    using CommandLineParser.Arguments;
    using CommandLineParser.Arguments.Discovery;
 
    public class Verb
    {
-      private readonly string _name;
       private readonly IArgument[] _arguments;
       private readonly MethodInfo _verbMethod;
       private readonly object _container;
 
-      public IDiscoverArguments ArgumentDiscovery { get; set; } = new ArgumentDiscovery();
+      public string Name { get; }
 
-      public string Name => _name;
-
-      public Verb(MethodInfo verbMethod, object container)
+      public Verb(MethodInfo verbMethod, object container, IDiscoverArguments argumentDiscovery)
       {
-         _name = verbMethod.Name.ToCamelCase();
-         _arguments = verbMethod.GetParameters().Select(p => ArgumentDiscovery.Discover(p)).ToArray();
+         Name = verbMethod.Name.ToCamelCase();
+         _arguments = verbMethod.GetParameters().Select(argumentDiscovery.Discover).ToArray();
          _verbMethod = verbMethod;
          _container = container;
       }
@@ -38,16 +36,20 @@
          return parsedArgs.Select(c => c.Item2).ToArray();
       }
 
-      public void Run(params object[] args)
+      public async Task RunAsync(params object[] args)
       {
-         _verbMethod.Invoke(_container, args);
+         var task = _verbMethod.Invoke(_container, args) as Task;
+         if (task != null)
+         {
+            await task;
+         }
       }
 
       public void WriteUsage(IWriteToConsole consoleWriter)
       {
          var argNames = string.Join(" ", _arguments.Select(c => c.ToString()));
 
-         consoleWriter.Write("  {0} {1}", _name, argNames);
+         consoleWriter.Write("  {0} {1}", Name, argNames);
       }
    }
 }

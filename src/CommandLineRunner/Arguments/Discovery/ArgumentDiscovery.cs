@@ -7,13 +7,13 @@
    {
       private readonly IDiscoverArguments[] _discoverers;
 
-      public ArgumentDiscovery()
+      public ArgumentDiscovery(IReadFromConsole consoleReader)
       {
          _discoverers = new IDiscoverArguments[]
             {
                new AnonymousArgumentDiscovery(),
                new UnaryArgumentDiscovery(),
-               new NamedArgumentDiscovery()
+               new NamedArgumentDiscovery(consoleReader)
             };
       }
 

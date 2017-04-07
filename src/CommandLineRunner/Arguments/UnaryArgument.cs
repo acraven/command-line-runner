@@ -2,7 +2,6 @@ namespace CommandLineParser.Arguments
 {
    using System;
    using System.Collections.Generic;
-   using System.Globalization;
    using System.Linq;
 
    public class UnaryArgument : IArgument
@@ -19,7 +18,7 @@ namespace CommandLineParser.Arguments
             var arg = argsToParse.First.Value;
             argsToParse.RemoveFirst();
 
-            if (string.Compare(arg, $"-{Name}", true, CultureInfo.InvariantCulture) == 0)
+            if (string.Compare(arg, $"-{Name}", StringComparison.OrdinalIgnoreCase) == 0)
             {
                found = true;
                break;

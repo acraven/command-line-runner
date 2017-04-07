@@ -4,16 +4,24 @@
    using System.Collections.Generic;
    using System.Linq;
    using System.Reflection;
+   using System.Threading.Tasks;
+   using CommandLineParser.Arguments.Discovery;
 
    public class Runner
    {
       private readonly IDictionary<string, Verb> _verbs = new Dictionary<string, Verb>();
+      private readonly string _name;
+      private readonly IWriteToConsole _consoleWriter;
+      private readonly IDiscoverArguments _argumentDiscovery;
 
-      public IWriteToConsole ConsoleWriter { get; set; } = new ConsoleWriter();
+      public Runner(string name, IWriteToConsole consoleWriter, IDiscoverArguments argumentDiscovery)
+      {
+         _name = name;
+         _consoleWriter = consoleWriter;
+         _argumentDiscovery = argumentDiscovery;
+      }
 
-      public string Name { get; set; } = AppDomain.CurrentDomain.FriendlyName;
-
-      public int Run(string[] args)
+      public async Task<int> RunAsync(string[] args)
       {
          try
          {
@@ -34,23 +42,23 @@
                return 1;
             }
 
-            verb.Run(verbArgs);
+            await verb.RunAsync(verbArgs);
             return 0;
          }
          catch (Exception e)
          {
-            ConsoleWriter.Write(e.Message);
+            _consoleWriter.Write(e.Message);
             return 1;
          }
       }
 
       private void WriteUsage()
       {
-         ConsoleWriter.Write("USAGE: {0}", Name);
+         _consoleWriter.Write("USAGE: {0}", _name);
 
          foreach (var verb in _verbs.Values)
          {
-            verb.WriteUsage(ConsoleWriter);
+            verb.WriteUsage(_consoleWriter);
          }
       }
 
@@ -66,7 +74,7 @@
 
             if (attributes.Length != 0)
             {
-               var verb = new Verb(methodInfo, container);
+               var verb = new Verb(methodInfo, container, _argumentDiscovery);
 
                _verbs.Add(verb.Name, verb);
             }

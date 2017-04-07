@@ -1,51 +1,54 @@
 namespace CommandLineParser.Tests.Scenarios
 {
-   using NUnit.Framework;
+   using Xunit;
+   using Shouldly;
+   using CommandLineParser.Arguments.Discovery;
 
    public class two_verbs_with_anonymous_values
    {
-      private StubConsoleWriter _consoleWriter;
-      private Runner _testSubject;
+      private readonly StubConsoleWriter _consoleWriter;
+      private readonly StubConsoleReader _consoleReader;
+      private readonly Runner _testSubject;
 
-      [SetUp]
-      public void SetupBeforeEachTest()
+      public two_verbs_with_anonymous_values()
       {
          _consoleWriter = new StubConsoleWriter();
-         _testSubject = new Runner { ConsoleWriter = _consoleWriter, Name = "CommandLineParser" };
+         _consoleReader = new StubConsoleReader();
+         _testSubject = new Runner("CommandLineParser", _consoleWriter, new ArgumentDiscovery(_consoleReader));
       }
 
-      [Test]
-      public void display_usage()
+      [Fact]
+      public async void display_usage()
       {
          _testSubject.Register(new Container());
-         _testSubject.Run(new[] { "help" });
+         await _testSubject.RunAsync(new[] { "help" });
 
-         _consoleWriter.AssertWrittenMessages(
+         _consoleWriter.AssertWrittenOutput(
             "USAGE: CommandLineParser",
             "  hash <string>",
             "  random <int32>");
       }
 
-      [Test]
-      public void call_first_verb()
+      [Fact]
+      public async void call_first_verb()
       {
          var testContainer = new Container();
          _testSubject.Register(testContainer);
-         _testSubject.Run(new[] { "hash", "myValue" });
+         await _testSubject.RunAsync(new[] { "hash", "myValue" });
 
-         Assert.That(testContainer.HashCalledCount, Is.EqualTo(1));
-         Assert.That(testContainer.LastHashValue, Is.EqualTo("myValue"));
+         testContainer.HashCalledCount.ShouldBe(1);
+         testContainer.LastHashValue.ShouldBe("myValue");
       }
 
-      [Test]
-      public void call_second_verb()
+      [Fact]
+      public async void call_second_verb()
       {
          var testContainer = new Container();
          _testSubject.Register(testContainer);
-         _testSubject.Run(new[] { "random", "23" });
+         await _testSubject.RunAsync(new[] { "random", "23" });
 
-         Assert.That(testContainer.RandomCalledCount, Is.EqualTo(1));
-         Assert.That(testContainer.LastRandomSize, Is.EqualTo(23));
+         testContainer.RandomCalledCount.ShouldBe(1);
+         testContainer.LastRandomSize.ShouldBe(23);
       }
 
       public class Container

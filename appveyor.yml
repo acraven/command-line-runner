@@ -1,29 +1,63 @@
-version: 0.0.{build}
-skip_tags: true
-init:
-- git config --global core.autocrlf input
-clone_depth: 1
-environment:
-  GITHUB_ACCESS_TOKEN:
-    secure: EQWmbklZx2BXtd3MhdqHmC4BKqRabNNV+JmeMvOMbTSkNCRwZ0xm7qfdsvHt+yTz
-configuration: Release
-platform: Any CPU
-assembly_info:
-  patch: true
-  file: '**\AssemblyInfo.*'
-  assembly_version: '{version}'
-  assembly_file_version: '{version}'
-  assembly_informational_version: '{version}'
-cache: C:\Users\appveyor\AppData\Local\NuGet\Cache
-before_build:
-- nuget restore CommandLineRunner.sln
-build:
-  project: CommandLineRunner.sln
-  verbosity: normal
-on_success:
-- git config --global credential.helper store
-- git config --global user.email "andrew@epworth-consulting.co.uk"
-- git config --global user.name "Andrew Craven"
-- ps: Add-Content "$env:USERPROFILE\.git-credentials" "https://$($env:GITHUB_ACCESS_TOKEN):x-oauth-basic@github.com`n"
-- git tag build-%APPVEYOR_BUILD_VERSION%
-- git push origin --tags
+-
+  branches:
+    except:
+      - stable
+  version: '{branch}-build{build}'
+  skip_tags: true
+  clone_depth: 1
+  cache: C:\Users\appveyor\.nuget\packages
+  configuration:
+    - Debug
+    - Release
+  before_build:
+    - ps: Import-Module .\build\psake.psm1
+    - ps: $env:VERSION_SUFFIX = 'preview' + "$env:APPVEYOR_BUILD_NUMBER".PadLeft(4, "0")
+  build_script:
+    - ps: |
+        Invoke-Psake .\build\build.ps1 -properties @{"Configuration"=$env:CONFIGURATION;"VersionSuffix"=$env:VERSION_SUFFIX}
+        if ($psake.build_success -eq $false) { exit 1 }
+  test: off
+  artifacts:
+    - path: 'artifacts\*.nupkg'
+  deploy:
+    on:
+      configuration: Debug
+    provider: NuGet
+    api_key:
+      secure: 4eGPThK/wSpRmfINQgAGQZD/e8r6FKRfp0SN4nB5/FBTHKJ1xIf/BK3/Iz5csDFm
+    artifact: /.*\.nupkg/
+-
+  branches:
+    only:
+      - stable
+  init:
+    - git config --global core.autocrlf input
+  environment:
+    GITHUB_ACCESS_TOKEN:
+      secure: EQWmbklZx2BXtd3MhdqHmC4BKqRabNNV+JmeMvOMbTSkNCRwZ0xm7qfdsvHt+yTz
+  version: '{branch}-build{build}'
+  skip_tags: true
+  clone_depth: 1
+  cache: C:\Users\appveyor\.nuget\packages
+  configuration: Release
+  before_build:
+    - ps: Import-Module .\build\psake.psm1
+  build_script:
+    - ps: |
+        Invoke-Psake .\build\build.ps1 -properties @{"Configuration"=$env:CONFIGURATION}
+        if ($psake.build_success -eq $false) { exit 1 }
+  test: off
+  artifacts:
+    - path: 'artifacts\*.nupkg'
+  deploy:
+    provider: NuGet
+    api_key:
+      secure: 4eGPThK/wSpRmfINQgAGQZD/e8r6FKRfp0SN4nB5/FBTHKJ1xIf/BK3/Iz5csDFm
+    artifact: /.*\.nupkg/
+  on_success:
+    - git config --global credential.helper store
+    - git config --global user.email "andrew@epworth-consulting.co.uk"
+    - git config --global user.name "Andrew Craven"
+    - ps: Add-Content "$env:USERPROFILE\.git-credentials" "https://$($env:GITHUB_ACCESS_TOKEN):x-oauth-basic@github.com`n"
+    - git tag build-%APPVEYOR_BUILD_VERSION%
+    - git push origin --tags

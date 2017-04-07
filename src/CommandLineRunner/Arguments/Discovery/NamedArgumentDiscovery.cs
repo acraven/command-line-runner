@@ -1,19 +1,29 @@
 namespace CommandLineParser.Arguments.Discovery
 {
    using System;
+   using System.Linq;
    using System.Reflection;
 
    public class NamedArgumentDiscovery : IDiscoverArguments
    {
+      private readonly IReadFromConsole _consoleReader;
+
+      public NamedArgumentDiscovery(IReadFromConsole consoleReader)
+      {
+         _consoleReader = consoleReader;
+      }
+
       public IArgument Discover(ParameterInfo parameter)
       {
          var argumentType = GetArgumentType(parameter.ParameterType);
+         var sensitiveAttribute = parameter.GetCustomAttributes(typeof(SensitiveAttribute)).SingleOrDefault();
 
-         return new NamedArgument
+         return new NamedArgument(_consoleReader)
          {
             Name = parameter.Name.ToCamelCase(),
             Type = argumentType,
-            IsOptional = parameter.HasDefaultValue
+            IsOptional = parameter.HasDefaultValue,
+            IsSensitive = sensitiveAttribute != null
          };
       }
 

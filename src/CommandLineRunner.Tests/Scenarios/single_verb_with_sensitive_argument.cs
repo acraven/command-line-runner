@@ -4,13 +4,13 @@
    using Shouldly;
    using CommandLineParser.Arguments.Discovery;
 
-   public class single_verb_with_optional_flag
+   public class single_verb_with_sensitive_argument
    {
       private readonly StubConsoleWriter _consoleWriter;
       private readonly StubConsoleReader _consoleReader;
       private readonly Runner _testSubject;
 
-      public single_verb_with_optional_flag()
+      public single_verb_with_sensitive_argument()
       {
          _consoleWriter = new StubConsoleWriter();
          _consoleReader = new StubConsoleReader();
@@ -25,42 +25,44 @@
 
          _consoleWriter.AssertWrittenOutput(
             "USAGE: CommandLineParser",
-            "  verb [-flagA]");
+            "  verb -sensitiveThing <string>");
       }
 
       [Fact]
-      public async void call_verb_with_flag_argument()
+      public async void call_multiple_argument_verb_supplied()
       {
          var testContainer = new Container();
          _testSubject.Register(testContainer);
-         await _testSubject.RunAsync(new[] { "verb", "-flagA" });
+         await _testSubject.RunAsync(new[] { "verb", "-sensitiveThing", "passwordFromArgs" });
 
          testContainer.VerbCalledCount.ShouldBe(1);
-         testContainer.LastFlagA.ShouldBe(true);
+         testContainer.SensitiveThing.ShouldBe("passwordFromArgs");
       }
 
       [Fact]
-      public async void call_verb_without_flag_argument()
+      public async void call_multiple_argument_verb_missing()
       {
+         _consoleReader.Input.Enqueue("passwordFromConsole");
+
          var testContainer = new Container();
          _testSubject.Register(testContainer);
          await _testSubject.RunAsync(new[] { "verb" });
 
          testContainer.VerbCalledCount.ShouldBe(1);
-         testContainer.LastFlagA.ShouldBe(false);
+         testContainer.SensitiveThing.ShouldBe("passwordFromConsole");
       }
 
       public class Container
       {
          public int VerbCalledCount { get; private set; }
 
-         public bool LastFlagA { get; private set; }
+         public string SensitiveThing { get; private set; }
 
          [Verb]
-         public void Verb(bool flagA)
+         public void Verb([Sensitive]string sensitiveThing)
          {
             VerbCalledCount++;
-            LastFlagA = flagA;
+            SensitiveThing = sensitiveThing;
          }
       }
    }

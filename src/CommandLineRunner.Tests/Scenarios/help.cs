@@ -1,29 +1,32 @@
 ﻿namespace CommandLineParser.Tests.Scenarios
 {
-   using NUnit.Framework;
+   using Xunit;
+   using CommandLineParser.Arguments.Discovery;
 
    public class help
    {
-      private StubConsoleWriter _consoleWriter;
-      private Runner _testSubject;
+      private readonly StubConsoleWriter _consoleWriter;
+      private readonly StubConsoleReader _consoleReader;
+      private readonly Runner _testSubject;
 
-      [SetUp]
-      public void SetupBeforeEachTest()
+      public help()
       {
          _consoleWriter = new StubConsoleWriter();
-         _testSubject = new Runner { ConsoleWriter = _consoleWriter, Name = "CommandLineParser" };
+         _consoleReader = new StubConsoleReader();
+         _testSubject = new Runner("CommandLineParser", _consoleWriter, new ArgumentDiscovery(_consoleReader));
       }
 
-      [TestCase("/?")]
-      [TestCase("/help")]
-      [TestCase("-help")]
-      [TestCase("--help")]
-      [TestCase("help")]
-      public void display_usage_for_help_related_arguments(string arg)
+      [Theory]
+      [InlineData("/?")]
+      [InlineData("/help")]
+      [InlineData("-help")]
+      [InlineData("--help")]
+      [InlineData("help")]
+      public async void display_usage_for_help_related_arguments(string arg)
       {
-         _testSubject.Run(new[] { arg });
+         await _testSubject.RunAsync(new[] { arg });
 
-         _consoleWriter.AssertWrittenMessages(
+         _consoleWriter.AssertWrittenOutput(
             "USAGE: CommandLineParser");
       }
 

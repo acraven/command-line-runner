@@ -1,52 +1,55 @@
 ﻿namespace CommandLineParser.Tests.Scenarios
 {
-   using NUnit.Framework;
+   using Xunit;
+   using Shouldly;
+   using CommandLineParser.Arguments.Discovery;
 
    public class single_verb_with_two_arguments
    {
-      private StubConsoleWriter _consoleWriter;
-      private Runner _testSubject;
+      private readonly StubConsoleWriter _consoleWriter;
+      private readonly StubConsoleReader _consoleReader;
+      private readonly Runner _testSubject;
 
-      [SetUp]
-      public void SetupBeforeEachTest()
+      public single_verb_with_two_arguments()
       {
          _consoleWriter = new StubConsoleWriter();
-         _testSubject = new Runner { ConsoleWriter = _consoleWriter, Name = "CommandLineParser" };
+         _consoleReader = new StubConsoleReader();
+         _testSubject = new Runner("CommandLineParser", _consoleWriter, new ArgumentDiscovery(_consoleReader));
       }
 
-      [Test]
-      public void display_usage()
+      [Fact]
+      public async void display_usage()
       {
          _testSubject.Register(new Container());
-         _testSubject.Run(new[] { "help" });
+         await _testSubject.RunAsync(new[] { "help" });
 
-         _consoleWriter.AssertWrittenMessages(
+         _consoleWriter.AssertWrittenOutput(
             "USAGE: CommandLineParser",
             "  verb -valueA <string> -valueB <string>");
       }
 
-      [Test]
-      public void call_multiple_argument_verb()
+      [Fact]
+      public async void call_multiple_argument_verb()
       {
          var testContainer = new Container();
          _testSubject.Register(testContainer);
-         _testSubject.Run(new[] { "verb", "-valueA", "myValueForA", "-valueB", "myValueForB" });
+         await _testSubject.RunAsync(new[] { "verb", "-valueA", "myValueForA", "-valueB", "myValueForB" });
 
-         Assert.That(testContainer.VerbCalledCount, Is.EqualTo(1));
-         Assert.That(testContainer.LastValueA, Is.EqualTo("myValueForA"));
-         Assert.That(testContainer.LastValueB, Is.EqualTo("myValueForB"));
+         testContainer.VerbCalledCount.ShouldBe(1);
+         testContainer.LastValueA.ShouldBe("myValueForA");
+         testContainer.LastValueB.ShouldBe("myValueForB");
       }
 
-      [Test]
-      public void call_multiple_argument_verb_unordered()
+      [Fact]
+      public async void call_multiple_argument_verb_unordered()
       {
          var testContainer = new Container();
          _testSubject.Register(testContainer);
-         _testSubject.Run(new[] { "verb", "-valueB", "myValueForB", "-valueA", "myValueForA" });
+         await _testSubject.RunAsync(new[] { "verb", "-valueB", "myValueForB", "-valueA", "myValueForA" });
 
-         Assert.That(testContainer.VerbCalledCount, Is.EqualTo(1));
-         Assert.That(testContainer.LastValueA, Is.EqualTo("myValueForA"));
-         Assert.That(testContainer.LastValueB, Is.EqualTo("myValueForB"));
+         testContainer.VerbCalledCount.ShouldBe(1);
+         testContainer.LastValueA.ShouldBe("myValueForA");
+         testContainer.LastValueB.ShouldBe("myValueForB");
       }
 
       public class Container

@@ -1,52 +1,55 @@
 ﻿namespace CommandLineParser.Tests.Scenarios
 {
-   using NUnit.Framework;
+   using Xunit;
+   using Shouldly;
+   using CommandLineParser.Arguments.Discovery;
 
    public class single_verb_with_two_optional_arguments
    {
-      private StubConsoleWriter _consoleWriter;
-      private Runner _testSubject;
+      private readonly StubConsoleWriter _consoleWriter;
+      private readonly StubConsoleReader _consoleReader;
+      private readonly Runner _testSubject;
 
-      [SetUp]
-      public void SetupBeforeEachTest()
+      public single_verb_with_two_optional_arguments()
       {
          _consoleWriter = new StubConsoleWriter();
-         _testSubject = new Runner { ConsoleWriter = _consoleWriter, Name = "CommandLineParser" };
+         _consoleReader = new StubConsoleReader();
+         _testSubject = new Runner("CommandLineParser", _consoleWriter, new ArgumentDiscovery(_consoleReader));
       }
 
-      [Test]
-      public void display_usage()
+      [Fact]
+      public async void display_usage()
       {
          _testSubject.Register(new Container());
-         _testSubject.Run(new[] { "help" });
+         await _testSubject.RunAsync(new[] { "help" });
 
-         _consoleWriter.AssertWrittenMessages(
+         _consoleWriter.AssertWrittenOutput(
             "USAGE: CommandLineParser",
             "  verb [-stringValue <string>] [-intValue <int32>]");
       }
 
-      [Test]
-      public void call_optional_argument_verb()
+      [Fact]
+      public async void call_optional_argument_verb()
       {
          var testContainer = new Container();
          _testSubject.Register(testContainer);
-         _testSubject.Run(new[] { "verb", "-stringValue", "hello", "-intValue", "23" });
+         await _testSubject.RunAsync(new[] { "verb", "-stringValue", "hello", "-intValue", "23" });
 
-         Assert.That(testContainer.VerbCalledCount, Is.EqualTo(1));
-         Assert.That(testContainer.LastStringValue, Is.EqualTo("hello"));
-         Assert.That(testContainer.LastIntValue, Is.EqualTo(23));
+         testContainer.VerbCalledCount.ShouldBe(1);
+         testContainer.LastStringValue.ShouldBe("hello");
+         testContainer.LastIntValue.ShouldBe(23);
       }
 
-      [Test]
-      public void call_optional_argument_verb_without_arguments()
+      [Fact]
+      public async void call_optional_argument_verb_without_arguments()
       {
          var testContainer = new Container();
          _testSubject.Register(testContainer);
-         _testSubject.Run(new[] { "verb" });
+         await _testSubject.RunAsync(new[] { "verb" });
 
-         Assert.That(testContainer.VerbCalledCount, Is.EqualTo(1));
-         Assert.That(testContainer.LastStringValue, Is.Null);
-         Assert.That(testContainer.LastIntValue, Is.Null);
+         testContainer.VerbCalledCount.ShouldBe(1);
+         testContainer.LastStringValue.ShouldBeNull();
+         testContainer.LastIntValue.ShouldBeNull();
       }
 
       public class Container

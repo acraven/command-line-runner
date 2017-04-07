@@ -1,20 +1,20 @@
 ﻿namespace CommandLineParser.Tests
 {
    using System.Collections.Generic;
-   using NUnit.Framework;
+   using Shouldly;
 
    public class StubConsoleWriter : IWriteToConsole
    {
-      public List<string> Messages { get; } = new List<string>();
+      public List<string> Output { get; } = new List<string>();
 
       public void Write(string format, params object[] args)
       {
-         Messages.Add(string.Format(format, args));
+         Output.Add(string.Format(format, args));
       }
 
-      public void AssertWrittenMessages(params string[] expectedMessages)
+      public void AssertWrittenOutput(params string[] expectedMessages)
       {
-         CollectionAssert.AreEqual(expectedMessages, Messages.ToArray());
+         expectedMessages.ShouldBe(Output);
       }
    }
 }
