@@ -1,8 +1,8 @@
-namespace CommandLineParser.Tests.Scenarios
+namespace CommandLineRunner.Tests.Scenarios
 {
-   using Xunit;
+   using CommandLineRunner.Arguments.Discovery;
    using Shouldly;
-   using CommandLineParser.Arguments.Discovery;
+   using Xunit;
 
    public class two_verbs_with_anonymous_values
    {

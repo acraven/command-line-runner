@@ -1,4 +1,4 @@
-namespace CommandLineParser
+namespace CommandLineRunner
 {
    using System;
 

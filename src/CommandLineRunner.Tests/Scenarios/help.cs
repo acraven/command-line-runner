@@ -1,7 +1,7 @@
-﻿namespace CommandLineParser.Tests.Scenarios
+﻿namespace CommandLineRunner.Tests.Scenarios
 {
+   using CommandLineRunner.Arguments.Discovery;
    using Xunit;
-   using CommandLineParser.Arguments.Discovery;
 
    public class help
    {

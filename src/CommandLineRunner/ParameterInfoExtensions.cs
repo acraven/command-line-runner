@@ -1,4 +1,4 @@
-﻿namespace CommandLineParser
+﻿namespace CommandLineRunner
 {
    public static class ParameterInfoExtensions
    {

@@ -1,4 +1,4 @@
-﻿namespace CommandLineParser.Tests
+﻿namespace CommandLineRunner.Tests
 {
    using System.Collections.Generic;
    using Shouldly;

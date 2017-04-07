@@ -1,8 +1,8 @@
-﻿namespace CommandLineParser.Tests.Scenarios
+﻿namespace CommandLineRunner.Tests.Scenarios
 {
-   using Xunit;
+   using CommandLineRunner.Arguments.Discovery;
    using Shouldly;
-   using CommandLineParser.Arguments.Discovery;
+   using Xunit;
 
    public class single_verb_with_two_optional_arguments
    {

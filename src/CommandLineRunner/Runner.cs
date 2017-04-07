@@ -1,11 +1,11 @@
-﻿namespace CommandLineParser
+﻿namespace CommandLineRunner
 {
    using System;
    using System.Collections.Generic;
    using System.Linq;
    using System.Reflection;
    using System.Threading.Tasks;
-   using CommandLineParser.Arguments.Discovery;
+   using CommandLineRunner.Arguments.Discovery;
 
    public class Runner
    {

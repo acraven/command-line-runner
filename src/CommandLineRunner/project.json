@@ -1,10 +1,21 @@
 ﻿{
-  "version": "1.0.0-*",
+   "version": "1.0.0-*",
+
+   "title": "CommandLineRunner",
+   "authors": [ "Andrew Craven" ],
+   "packOptions": {
+      "tags": [ "cmd", "command line" ],
+      "licenseUrl": "https://github.com/acraven/command-line-runner/blob/master/LICENSE",
+      "repository": {
+         "type": "git",
+         "url": "git://github.com/acraven/command-line-runner"
+      }
+   },
 
    "dependencies": {
    },
 
-  "frameworks": {
+   "frameworks": {
       "netstandard1.6": {
          "dependencies": {
             "System.Linq": "4.3.0",
@@ -21,5 +32,5 @@
             "System.Linq": ""
          }
       }
-  }
+   }
 }

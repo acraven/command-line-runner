@@ -1,4 +1,4 @@
-namespace CommandLineParser.Arguments
+namespace CommandLineRunner.Arguments
 {
    using System;
    using System.Collections.Generic;

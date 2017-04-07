@@ -1,4 +1,4 @@
-﻿namespace CommandLineParser.Arguments.Discovery
+﻿namespace CommandLineRunner.Arguments.Discovery
 {
    using System.Linq;
    using System.Reflection;
