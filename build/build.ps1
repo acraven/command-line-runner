@@ -3,8 +3,8 @@ properties {
    $BasePath = Resolve-Path ..
    $SrcPath = "$BasePath\src"
    $ArtifactsPath = "$BasePath\artifacts"
-   $ProjectJsonPath = "$SrcPath\CommandLineRunner\project.json"
-   $TestProjectJsonPath = "$SrcPath\CommandLineRunner.Tests\project.json"
+   $ProjectJsonPath = "$SrcPath\CommandLineRunner\CommandLineRunner.csproj"
+   $TestProjectJsonPath = "$SrcPath\CommandLineRunner.Tests\CommandLineRunner.Tests.csproj"
    $Configuration = if ($Configuration) {$Configuration} else { "Debug" }
 }
 

@@ -1,11 +1,11 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 14
-VisualStudioVersion = 14.0.25420.1
+# Visual Studio 15
+VisualStudioVersion = 15.0.26228.9
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "CommandLineRunner", "src\CommandLineRunner\CommandLineRunner.xproj", "{E9D15091-4849-4209-B00E-E3B2282A80D4}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CommandLineRunner", "src\CommandLineRunner\CommandLineRunner.csproj", "{E9D15091-4849-4209-B00E-E3B2282A80D4}"
 EndProject
-Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "CommandLineRunner.Tests", "src\CommandLineRunner.Tests\CommandLineRunner.Tests.xproj", "{B79225E9-2A26-4C08-9CAF-C53AD5AEF75E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CommandLineRunner.Tests", "src\CommandLineRunner.Tests\CommandLineRunner.Tests.csproj", "{B79225E9-2A26-4C08-9CAF-C53AD5AEF75E}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
