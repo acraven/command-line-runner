@@ -56,15 +56,15 @@
             }
 
             var argsToParse = new LinkedList<string>(args.Skip(verbIndex + 1));
-            var verbArgs = verb.ParseArguments(argsToParse);
+            var parseResult = verb.ParseArguments(argsToParse);
 
-            if (argsToParse.Any())
+            if (!parseResult.Success || argsToParse.Any())
             {
-               WriteUsage();
+               WriteVerbHelp(verb);
                return 1;
             }
 
-            await verb.RunAsync(verbArgs);
+            await verb.RunAsync(parseResult.Arguments);
             return 0;
          }
          catch (Exception e)

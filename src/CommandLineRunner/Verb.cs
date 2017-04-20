@@ -36,7 +36,7 @@
          }
       }
 
-      public object[] ParseArguments(LinkedList<string> argsToParse)
+      public ParseResponse ParseArguments(LinkedList<string> argsToParse)
       {
          var parsedArgs = new List<Tuple<IArgument, object>>();
 
@@ -45,7 +45,7 @@
             argument.Parse(argsToParse, parsedArgs);
          }
 
-         return parsedArgs.Select(c => c.Item2).ToArray();
+         return new ParseResponse(parsedArgs.Count == _arguments.Length, parsedArgs.Select(c => c.Item2).ToArray());
       }
 
       public async Task RunAsync(params object[] args)
@@ -89,6 +89,19 @@
 
             _helpMethod.Invoke(_container, new object[] { consoleWriter });
          }
+      }
+
+      public class ParseResponse
+      {
+         public ParseResponse(bool success, object[] arguments)
+         {
+            Success = success;
+            Arguments = arguments;
+         }
+
+         public bool Success { get; }
+
+         public object[] Arguments { get; }
       }
    }
 }

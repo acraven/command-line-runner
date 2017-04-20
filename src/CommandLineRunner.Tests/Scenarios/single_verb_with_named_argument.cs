@@ -53,6 +53,30 @@
          testContainer.LastSingleArg.ShouldBe("argValue");
       }
 
+      [Fact]
+      public async void call_verb_without_argument_should_not_call_method()
+      {
+         var testContainer = new Container();
+         _testSubject.Register(testContainer);
+         await _testSubject.RunAsync(new[] { "verb" });
+
+         testContainer.VerbCalledCount.ShouldBe(0);
+      }
+
+      [Fact]
+      public async void call_verb_without_argument_should_display_help()
+      {
+         var testContainer = new Container();
+         _testSubject.Register(testContainer);
+         await _testSubject.RunAsync(new[] { "verb" });
+
+         _consoleWriter.AssertWrittenOutput(
+            "USAGE: CommandLineParser verb --singleArg|-sa <string>",
+            "",
+            "Options:",
+            "  --singleArg|-sa <string>");
+      }
+
       public class Container
       {
          public int VerbCalledCount { get; private set; }
