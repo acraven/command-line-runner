@@ -60,5 +60,5 @@
     - git config --global user.email "andrew@epworth-consulting.co.uk"
     - git config --global user.name "Andrew Craven"
     - ps: Add-Content "$env:USERPROFILE\.git-credentials" "https://$($env:GITHUB_ACCESS_TOKEN):x-oauth-basic@github.com`n"
-    - git tag build-($env:BUILD_VERSION)
+    - git tag build-%BUILD_VERSION%
     - git push origin --tags
