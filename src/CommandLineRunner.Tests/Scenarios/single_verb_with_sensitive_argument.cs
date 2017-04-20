@@ -21,11 +21,14 @@
       public async void display_usage()
       {
          _testSubject.Register(new Container());
-         await _testSubject.RunAsync(new[] { "help" });
+         await _testSubject.RunAsync(new[] { "--help" });
 
          _consoleWriter.AssertWrittenOutput(
-            "USAGE: CommandLineParser",
-            "  verb -sensitiveThing <string>");
+            "USAGE: CommandLineParser [--help|-h]",
+            "                         <command> [<args>]",
+            "",
+            "These are the available commands:",
+            "  verb --sensitiveThing <string>");
       }
 
       [Fact]
@@ -33,7 +36,7 @@
       {
          var testContainer = new Container();
          _testSubject.Register(testContainer);
-         await _testSubject.RunAsync(new[] { "verb", "-sensitiveThing", "passwordFromArgs" });
+         await _testSubject.RunAsync(new[] { "verb", "--sensitiveThing", "passwordFromArgs" });
 
          testContainer.VerbCalledCount.ShouldBe(1);
          testContainer.SensitiveThing.ShouldBe("passwordFromArgs");

@@ -8,6 +8,8 @@ namespace CommandLineRunner.Arguments
    {
       public string Name { get; set; }
 
+      public string ShortName { get; set; }
+
       public void Parse(LinkedList<string> argsToParse, List<Tuple<IArgument, object>> parsedArgs)
       {
          var skippedArgs = new Stack<string>();
@@ -18,7 +20,7 @@ namespace CommandLineRunner.Arguments
             var arg = argsToParse.First.Value;
             argsToParse.RemoveFirst();
 
-            if (string.Compare(arg, $"-{Name}", StringComparison.OrdinalIgnoreCase) == 0)
+            if (string.Compare(arg, $"--{Name}", StringComparison.OrdinalIgnoreCase) == 0 || (!string.IsNullOrEmpty(ShortName) && string.Compare(arg, $"-{ShortName}", StringComparison.OrdinalIgnoreCase) == 0))
             {
                found = true;
                break;
@@ -37,7 +39,14 @@ namespace CommandLineRunner.Arguments
 
       public override string ToString()
       {
-         return $"[-{Name}]";
+         var arg = $"--{Name}";
+
+         if (!string.IsNullOrEmpty(ShortName))
+         {
+            arg += $"|-{ShortName}";
+         }
+
+         return $"[{arg}]";
       }
    }
 }

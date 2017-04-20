@@ -21,10 +21,13 @@ namespace CommandLineRunner.Tests.Scenarios
       public async void display_usage()
       {
          _testSubject.Register(new Container());
-         await _testSubject.RunAsync(new[] { "help" });
+         await _testSubject.RunAsync(new[] { "--help" });
 
          _consoleWriter.AssertWrittenOutput(
-            "USAGE: CommandLineParser",
+            "USAGE: CommandLineParser [--help|-h]",
+            "                         <command> [<args>]",
+            "",
+            "These are the available commands:",
             "  hash <string>",
             "  random <int32>");
       }

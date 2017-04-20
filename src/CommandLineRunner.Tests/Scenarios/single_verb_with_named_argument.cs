@@ -4,13 +4,13 @@
    using Shouldly;
    using Xunit;
 
-   public class single_verb_with_optional_flag
+   public class single_verb_with_named_argument
    {
       private readonly StubConsoleWriter _consoleWriter;
       private readonly StubConsoleReader _consoleReader;
       private readonly Runner _testSubject;
 
-      public single_verb_with_optional_flag()
+      public single_verb_with_named_argument()
       {
          _consoleWriter = new StubConsoleWriter();
          _consoleReader = new StubConsoleReader();
@@ -28,53 +28,42 @@
             "                         <command> [<args>]",
             "",
             "These are the available commands:",
-            "  verb [--flag|-f]");
+            "  verb --singleArg|-sa <string>");
       }
 
       [Fact]
-      public async void call_verb_with_flag_argument()
+      public async void call_verb()
       {
          var testContainer = new Container();
          _testSubject.Register(testContainer);
-         await _testSubject.RunAsync(new[] { "verb", "--flag" });
+         await _testSubject.RunAsync(new[] { "verb", "--singleArg", "myValueForArg" });
 
          testContainer.VerbCalledCount.ShouldBe(1);
-         testContainer.LastFlag.ShouldBe(true);
+         testContainer.LastSingleArg.ShouldBe("myValueForArg");
       }
 
       [Fact]
-      public async void call_verb_with_flag_argument_short_name()
+      public async void call_verb_with_short_name()
       {
          var testContainer = new Container();
          _testSubject.Register(testContainer);
-         await _testSubject.RunAsync(new[] { "verb", "-f" });
+         await _testSubject.RunAsync(new[] { "verb", "-sa", "argValue" });
 
          testContainer.VerbCalledCount.ShouldBe(1);
-         testContainer.LastFlag.ShouldBe(true);
-      }
-
-      [Fact]
-      public async void call_verb_without_flag_argument()
-      {
-         var testContainer = new Container();
-         _testSubject.Register(testContainer);
-         await _testSubject.RunAsync(new[] { "verb" });
-
-         testContainer.VerbCalledCount.ShouldBe(1);
-         testContainer.LastFlag.ShouldBe(false);
+         testContainer.LastSingleArg.ShouldBe("argValue");
       }
 
       public class Container
       {
          public int VerbCalledCount { get; private set; }
 
-         public bool LastFlag { get; private set; }
+         public string LastSingleArg { get; private set; }
 
          [Verb]
-         public void Verb([Argument(ShortName = "f")]bool flag)
+         public void Verb([Argument(ShortName = "sa")]string singleArg)
          {
             VerbCalledCount++;
-            LastFlag = flag;
+            LastSingleArg = singleArg;
          }
       }
    }

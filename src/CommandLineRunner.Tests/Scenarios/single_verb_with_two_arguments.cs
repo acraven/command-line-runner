@@ -24,8 +24,11 @@
          await _testSubject.RunAsync(new[] { "help" });
 
          _consoleWriter.AssertWrittenOutput(
-            "USAGE: CommandLineParser",
-            "  verb -valueA <string> -valueB <string>");
+            "USAGE: CommandLineParser [--help|-h]",
+            "                         <command> [<args>]",
+            "",
+            "These are the available commands:",
+            "  verb --valueA <string> --valueB <string>");
       }
 
       [Fact]
@@ -33,7 +36,7 @@
       {
          var testContainer = new Container();
          _testSubject.Register(testContainer);
-         await _testSubject.RunAsync(new[] { "verb", "-valueA", "myValueForA", "-valueB", "myValueForB" });
+         await _testSubject.RunAsync(new[] { "verb", "--valueA", "myValueForA", "--valueB", "myValueForB" });
 
          testContainer.VerbCalledCount.ShouldBe(1);
          testContainer.LastValueA.ShouldBe("myValueForA");
@@ -45,7 +48,7 @@
       {
          var testContainer = new Container();
          _testSubject.Register(testContainer);
-         await _testSubject.RunAsync(new[] { "verb", "-valueB", "myValueForB", "-valueA", "myValueForA" });
+         await _testSubject.RunAsync(new[] { "verb", "--valueB", "myValueForB", "--valueA", "myValueForA" });
 
          testContainer.VerbCalledCount.ShouldBe(1);
          testContainer.LastValueA.ShouldBe("myValueForA");

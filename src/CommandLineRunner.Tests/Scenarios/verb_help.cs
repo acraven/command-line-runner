@@ -3,13 +3,13 @@
    using CommandLineRunner.Arguments.Discovery;
    using Xunit;
 
-   public class help
+   public class verb_help
    {
       private readonly StubConsoleWriter _consoleWriter;
       private readonly StubConsoleReader _consoleReader;
       private readonly Runner _testSubject;
 
-      public help()
+      public verb_help()
       {
          _consoleWriter = new StubConsoleWriter();
          _consoleReader = new StubConsoleReader();
@@ -19,35 +19,36 @@
       }
 
       [Theory]
-      [InlineData("/?")]
-      [InlineData("/help")]
-      [InlineData("-help")]
       [InlineData("-h")]
       [InlineData("--help")]
-      [InlineData("--h")]
-      [InlineData("help")]
-      public async void display_usage_for_help_related_arguments(string arg)
+      public async void display_verb_help(string arg)
       {
-         await _testSubject.RunAsync(new[] { arg });
+         await _testSubject.RunAsync(new[] { arg, "verb" });
 
          _consoleWriter.AssertWrittenOutput(
-            "USAGE: CommandLineParser [--help|-h]",
-            "                         <command> [<args>]",
+            "USAGE: CommandLineParser verb --singleArg|-sa <string>",
             "",
-            "These are the available commands:",
-            "  verb --singleArg <string>");
+            "Description of verb",
+            "",
+            "Options:",
+            "  --singleArg|-sa <string>",
+            "",
+            "First line of verb help",
+            "Second line of verb help");
       }
 
       public class Container
       {
-         [Verb]
-         public void Verb(string singleArg)
+         [Verb(Description = "Description of verb")]
+         public void Verb([Argument(ShortName = "sa")]string singleArg)
          {
          }
-      }
 
-      // TODO: Missing mandatory arg
-      // TODO: Non-null optional args
-      // TODO: missing args, default verb, case, verb messages, bool args, named args
+         public void VerbHelp(IWriteToConsole consolerWriter)
+         {
+            consolerWriter.WriteLine("First line of verb help");
+            consolerWriter.WriteLine("Second line of verb help");
+         }
+      }
    }
 }

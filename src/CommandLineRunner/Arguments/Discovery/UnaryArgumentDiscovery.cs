@@ -1,5 +1,6 @@
 namespace CommandLineRunner.Arguments.Discovery
 {
+   using System.Linq;
    using System.Reflection;
 
    public class UnaryArgumentDiscovery : IDiscoverArguments
@@ -8,7 +9,13 @@ namespace CommandLineRunner.Arguments.Discovery
       {
          if (parameter.ParameterType == typeof(bool))
          {
-            return new UnaryArgument { Name = parameter.Name.ToCamelCase() };
+            var argumentAttribute = parameter.GetCustomAttributes(typeof(ArgumentAttribute)).Cast<ArgumentAttribute>().SingleOrDefault();
+
+            return new UnaryArgument
+            {
+               Name = parameter.Name.ToCamelCase(),
+               ShortName = argumentAttribute?.ShortName?.ToLower()
+            };
          }
 
          return null;

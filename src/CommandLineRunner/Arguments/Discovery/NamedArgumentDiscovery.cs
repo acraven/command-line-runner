@@ -17,10 +17,12 @@ namespace CommandLineRunner.Arguments.Discovery
       {
          var argumentType = GetArgumentType(parameter.ParameterType);
          var sensitiveAttribute = parameter.GetCustomAttributes(typeof(SensitiveAttribute)).SingleOrDefault();
+         var argumentAttribute = parameter.GetCustomAttributes(typeof(ArgumentAttribute)).Cast<ArgumentAttribute>().SingleOrDefault();
 
          return new NamedArgument(_consoleReader)
          {
             Name = parameter.Name.ToCamelCase(),
+            ShortName = argumentAttribute?.ShortName?.ToLower(),
             Type = argumentType,
             IsOptional = parameter.HasDefaultValue,
             IsSensitive = sensitiveAttribute != null

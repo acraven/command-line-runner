@@ -12,16 +12,28 @@
    {
       private readonly IArgument[] _arguments;
       private readonly MethodInfo _verbMethod;
+      private readonly MethodInfo _helpMethod;
       private readonly object _container;
 
       public string Name { get; }
 
-      public Verb(MethodInfo verbMethod, object container, IDiscoverArguments argumentDiscovery)
+      public string Description { get; }
+
+      public Verb(string description, MethodInfo verbMethod, object container, IDiscoverArguments argumentDiscovery)
       {
          Name = verbMethod.Name.ToCamelCase();
+         Description = description;
          _arguments = verbMethod.GetParameters().Select(argumentDiscovery.Discover).ToArray();
          _verbMethod = verbMethod;
          _container = container;
+
+         var helpMethod = container.GetType().GetMethod(verbMethod.Name + "Help", BindingFlags.Public | BindingFlags.Instance);
+
+         var parameters = helpMethod?.GetParameters();
+         if (parameters?.Length == 1 && parameters[0].ParameterType == typeof(IWriteToConsole))
+         {
+            _helpMethod = helpMethod;
+         }
       }
 
       public object[] ParseArguments(LinkedList<string> argsToParse)
@@ -49,7 +61,34 @@
       {
          var argNames = string.Join(" ", _arguments.Select(c => c.ToString()));
 
-         consoleWriter.Write("  {0} {1}", Name, argNames);
+         consoleWriter.WriteLine("{0} {1}", Name, argNames);
+      }
+
+      public void WriteHelp(IWriteToConsole consoleWriter)
+      {
+         if (!string.IsNullOrEmpty(Description))
+         {
+            consoleWriter.WriteLine("");
+            consoleWriter.WriteLine(Description);
+         }
+
+         if (_arguments.Any())
+         {
+            consoleWriter.WriteLine("");
+            consoleWriter.WriteLine("Options:");
+
+            foreach (var argument in _arguments)
+            {
+               consoleWriter.WriteLine("  {0}", argument.ToString());
+            }
+         }
+
+         if (_helpMethod != null)
+         {
+            consoleWriter.WriteLine("");
+
+            _helpMethod.Invoke(_container, new object[] { consoleWriter });
+         }
       }
    }
 }

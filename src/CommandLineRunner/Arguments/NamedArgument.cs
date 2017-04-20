@@ -15,6 +15,8 @@ namespace CommandLineRunner.Arguments
 
       public string Name { get; set; }
 
+      public string ShortName { get; set; }
+
       public Type Type { get; set; }
 
       public bool IsOptional { get; set; }
@@ -31,7 +33,7 @@ namespace CommandLineRunner.Arguments
             var arg = argsToParse.First.Value;
             argsToParse.RemoveFirst();
 
-            if (string.Compare(arg, $"-{Name}", StringComparison.OrdinalIgnoreCase) == 0)
+            if (string.Compare(arg, $"--{Name}", StringComparison.OrdinalIgnoreCase) == 0 || (!string.IsNullOrEmpty(ShortName) && string.Compare(arg, $"-{ShortName}", StringComparison.OrdinalIgnoreCase) == 0))
             {
                found = true;
                var parsedArg = argsToParse.First.Value.ToParsedArg(Type);
@@ -61,12 +63,21 @@ namespace CommandLineRunner.Arguments
 
       public override string ToString()
       {
-         if (IsOptional)
+         var arg = $"--{Name}";
+
+         if (!string.IsNullOrEmpty(ShortName))
          {
-            return $"[-{Name} <{Type.Name.ToLower()}>]";
+            arg += $"|-{ShortName}";
          }
 
-         return $"-{Name} <{Type.Name.ToLower()}>";
+         arg += $" <{Type.Name.ToLower()}>";
+         
+         if (IsOptional)
+         {
+            return $"[{arg}]";
+         }
+
+         return arg;
       }
    }
 }

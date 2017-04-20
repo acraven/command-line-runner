@@ -21,11 +21,14 @@
       public async void display_usage()
       {
          _testSubject.Register(new Container());
-         await _testSubject.RunAsync(new[] { "help" });
+         await _testSubject.RunAsync(new[] { "--help" });
 
          _consoleWriter.AssertWrittenOutput(
-            "USAGE: CommandLineParser",
-            "  verb [-stringValue <string>] [-intValue <int32>]");
+            "USAGE: CommandLineParser [--help|-h]",
+            "                         <command> [<args>]",
+            "",
+            "These are the available commands:",
+            "  verb [--stringValue <string>] [--intValue <int32>]");
       }
 
       [Fact]
@@ -33,7 +36,7 @@
       {
          var testContainer = new Container();
          _testSubject.Register(testContainer);
-         await _testSubject.RunAsync(new[] { "verb", "-stringValue", "hello", "-intValue", "23" });
+         await _testSubject.RunAsync(new[] { "verb", "--stringValue", "hello", "--intValue", "23" });
 
          testContainer.VerbCalledCount.ShouldBe(1);
          testContainer.LastStringValue.ShouldBe("hello");

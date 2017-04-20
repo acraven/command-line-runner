@@ -1,20 +1,29 @@
 ﻿namespace CommandLineRunner.Tests
 {
-   using System.Collections.Generic;
+   using System;
+   using System.Text;
    using Shouldly;
 
    public class StubConsoleWriter : IWriteToConsole
    {
-      public List<string> Output { get; } = new List<string>();
+      public StringBuilder Output { get; } = new StringBuilder();
 
       public void Write(string format, params object[] args)
       {
-         Output.Add(string.Format(format, args));
+         Output.Append(string.Format(format, args));
+      }
+
+      public void WriteLine(string format, params object[] args)
+      {
+         Output.AppendLine(string.Format(format, args));
       }
 
       public void AssertWrittenOutput(params string[] expectedMessages)
       {
-         expectedMessages.ShouldBe(Output);
+         var expected = string.Join(Environment.NewLine, expectedMessages);
+         expected += Environment.NewLine;
+
+         Output.ToString().ShouldBe(expected);
       }
    }
 }
