@@ -14,6 +14,7 @@ namespace CommandLineRunner.Arguments.Discovery
             return new UnaryArgument
             {
                Name = parameter.Name.ToCamelCase(),
+               Description = argumentAttribute?.Description,
                ShortName = argumentAttribute?.ShortName?.ToLower()
             };
          }

@@ -5,6 +5,10 @@ namespace CommandLineRunner.Arguments
 
    public interface IArgument
    {
+      string Name { get; }
+
+      string Description { get; }
+
       void Parse(LinkedList<string> argsToParse, List<Tuple<IArgument, object>> parsedArgs);
    }
 }

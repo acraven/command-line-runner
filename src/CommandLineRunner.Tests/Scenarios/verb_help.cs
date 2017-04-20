@@ -1,5 +1,6 @@
 ﻿namespace CommandLineRunner.Tests.Scenarios
 {
+   using System.ComponentModel;
    using CommandLineRunner.Arguments.Discovery;
    using Xunit;
 
@@ -31,7 +32,7 @@
             "Description of verb",
             "",
             "Options:",
-            "  --singleArg|-sa <string>",
+            "  --singleArg|-sa <string> Description of argument",
             "",
             "First line of verb help",
             "Second line of verb help");
@@ -40,7 +41,8 @@
       public class Container
       {
          [Verb(Description = "Description of verb")]
-         public void Verb([Argument(ShortName = "sa")]string singleArg)
+         public void Verb(
+            [Argument(ShortName = "sa", Description = "Description of argument")]string singleArg)
          {
          }
 

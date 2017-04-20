@@ -7,6 +7,8 @@ namespace CommandLineRunner.Arguments
    {
       public string Name { get; set; }
 
+      public string Description { get; set; }
+
       public Type Type { get; set; }
 
       public void Parse(LinkedList<string> argsToParse, List<Tuple<IArgument, object>> parsedArgs)

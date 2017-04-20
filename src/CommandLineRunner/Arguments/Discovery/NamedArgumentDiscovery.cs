@@ -22,6 +22,7 @@ namespace CommandLineRunner.Arguments.Discovery
          return new NamedArgument(_consoleReader)
          {
             Name = parameter.Name.ToCamelCase(),
+            Description = argumentAttribute?.Description,
             ShortName = argumentAttribute?.ShortName?.ToLower(),
             Type = argumentType,
             IsOptional = parameter.HasDefaultValue,

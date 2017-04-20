@@ -4,6 +4,7 @@
    using System.Collections.Generic;
    using System.Linq;
    using System.Reflection;
+   using System.Text;
    using System.Threading.Tasks;
    using CommandLineRunner.Arguments;
    using CommandLineRunner.Arguments.Discovery;
@@ -77,9 +78,20 @@
             consoleWriter.WriteLine("");
             consoleWriter.WriteLine("Options:");
 
+            var maxLength = _arguments.Select(arg => arg.ToString().Length).Max();
+
             foreach (var argument in _arguments)
             {
-               consoleWriter.WriteLine("  {0}", argument.ToString());
+               var line = argument.ToString();
+
+               line += new string(' ', maxLength - line.Length);
+
+               if (!string.IsNullOrEmpty(argument.Description))
+               {
+                  line += " " + argument.Description;
+               }
+               
+               consoleWriter.WriteLine("  " + line);
             }
          }
 

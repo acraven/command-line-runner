@@ -9,16 +9,19 @@ namespace CommandLineRunner.Arguments.Discovery
       {
          var anonymousAttribute = parameter.GetCustomAttributes(typeof(AnonymousAttribute)).SingleOrDefault();
 
-         if (anonymousAttribute != null)
+         if (anonymousAttribute == null)
          {
-            return new AnonymousArgument
-            {
-               Name = parameter.Name.ToCamelCase(),
-               Type = parameter.ParameterType
-            };
+            return null;
          }
 
-         return null;
+         var argumentAttribute = parameter.GetCustomAttributes(typeof(ArgumentAttribute)).Cast<ArgumentAttribute>().SingleOrDefault();
+
+         return new AnonymousArgument
+         {
+            Name = parameter.Name.ToCamelCase(),
+            Description = argumentAttribute?.Description,
+            Type = parameter.ParameterType
+         };
       }
    }
 }

@@ -15,6 +15,8 @@ namespace CommandLineRunner.Arguments
 
       public string Name { get; set; }
 
+      public string Description { get; set; }
+
       public string ShortName { get; set; }
 
       public Type Type { get; set; }
