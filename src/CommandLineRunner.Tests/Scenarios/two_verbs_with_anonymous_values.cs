@@ -28,8 +28,8 @@ namespace CommandLineRunner.Tests.Scenarios
             "                         <command> [<args>]",
             "",
             "These are the available commands:",
-            "  hash <string>",
-            "  random <int32>");
+            "  hash <value:string>",
+            "  random <size:int32>");
       }
 
       [Fact]

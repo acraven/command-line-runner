@@ -11,7 +11,11 @@ namespace CommandLineRunner.Arguments.Discovery
 
          if (anonymousAttribute != null)
          {
-            return new AnonymousArgument { Type = parameter.ParameterType };
+            return new AnonymousArgument
+            {
+               Name = parameter.Name.ToCamelCase(),
+               Type = parameter.ParameterType
+            };
          }
 
          return null;

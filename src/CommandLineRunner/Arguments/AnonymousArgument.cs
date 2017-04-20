@@ -5,6 +5,8 @@ namespace CommandLineRunner.Arguments
 
    public class AnonymousArgument : IArgument
    {
+      public string Name { get; set; }
+
       public Type Type { get; set; }
 
       public void Parse(LinkedList<string> argsToParse, List<Tuple<IArgument, object>> parsedArgs)
@@ -16,7 +18,7 @@ namespace CommandLineRunner.Arguments
 
       public override string ToString()
       {
-         return $"<{Type.Name.ToLower()}>";
+         return $"<{Name}:{Type.Name.ToLower()}>";
       }
    }
 }
