@@ -36,7 +36,7 @@ for:
     - git config --global core.autocrlf input
   environment:
     GITHUB_ACCESS_TOKEN:
-      secure: EQWmbklZx2BXtd3MhdqHmC4BKqRabNNV+JmeMvOMbTSkNCRwZ0xm7qfdsvHt+yTz
+      secure: 8YJFgN3eKjUwWYYJkqc4cr509OQNeluaFSluVJo5f3h+wB/uzE2RonCZKhVuFx0w
   version: '{branch}-build{build}'
   skip_tags: true
   clone_depth: 1
