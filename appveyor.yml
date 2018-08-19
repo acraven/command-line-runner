@@ -26,7 +26,7 @@ for:
       configuration: Debug
     provider: NuGet
     api_key:
-      secure: 4eGPThK/wSpRmfINQgAGQZD/e8r6FKRfp0SN4nB5/FBTHKJ1xIf/BK3/Iz5csDFm
+      secure: T+mZG82JKtFeFvMcDiQPrDCTxoFIjmnWAg6bufXFChOmq9smm6BMQSQVBXGNqZkH
     artifact: /.*\.nupkg/
 -
   branches:
@@ -56,7 +56,7 @@ for:
   deploy:
     provider: NuGet
     api_key:
-      secure: 4eGPThK/wSpRmfINQgAGQZD/e8r6FKRfp0SN4nB5/FBTHKJ1xIf/BK3/Iz5csDFm
+      secure: T+mZG82JKtFeFvMcDiQPrDCTxoFIjmnWAg6bufXFChOmq9smm6BMQSQVBXGNqZkH
     artifact: /.*\.nupkg/
   on_success:
     - git config --global credential.helper store
